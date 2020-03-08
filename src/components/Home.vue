@@ -1,47 +1,36 @@
 <template>
-  <div class="hello">
-    <tool-bar />
-    <h1>{{ msg }}</h1>
+  <div >
+    <my-header />
+    <div class="home">
+      <h1>申し訳ございません。只今工事中です。</h1>
+      <a class="main-nav-logo" href="/">
+        <img alt="logo"  src="@/assets/maintenance.gif" width="20%" />
+      </a>
 
-    <p>
-      For222 a guide and recipes on how to configure / customize this project,
-      <br />check out the
-      <a
-        href="https://cli.vuejs.org"
-        target="_blank"
-        rel="noopener"
-      >vue-cli documentation</a>.
-    </p>
-    <h3>Installed CLI Plugins</h3>
-  
+    </div>
+
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
-import { ToolBar } from "@/components/core/index";
+import  Header  from "@/components/core/Header.vue";
 @Component({
   components: {
-    ToolBar
+    'my-header': Header
   },
 })
 export default class Home extends Vue {
   @Prop() private msg!: string;
 }
 </script>
-<style scoped>
-h3 {
-  margin: 40px 0 0;
-}
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-li {
-  display: inline-block;
-  margin: 0 10px;
-}
-a {
-  color: #42b983;
+<style >
+.home {
+  /** header宽度 */
+  width: 1000px;
+  /** header居中 */
+  margin: 0 auto;
+  /** 项目居中 */
+  align-items: center;
 }
 </style>

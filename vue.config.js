@@ -7,7 +7,20 @@ module.exports = {
           publicPath: '/',
           // 模板来源
           template: 'src/template/index.html',
-          title: 'Index Page'
+          title: 'ikenLab - 知识分享，自由写作'
         }
-    }
+    },
+    devServer: {
+      disableHostCheck: true,
+      port: 8080,
+      proxy: {
+        '/': {
+          target: 'http://localhost:9000/',
+          changeOrigin: true,
+          pathRewrite:{
+            '^/':'/'
+        }
+        },
+      },
+    },
 }
