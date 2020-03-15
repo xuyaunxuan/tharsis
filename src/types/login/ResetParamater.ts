@@ -5,7 +5,7 @@ export default class ResetParamater {
 
 	public mailAddress: string
 
-	public identifyCd: string
+	public captchaCode: string
 	
 	public oncePassword: string
 
@@ -13,7 +13,7 @@ export default class ResetParamater {
 
 	constructor() {
 		this.mailAddress = '',
-		this.identifyCd = '',
+		this.captchaCode = '',
 		this.oncePassword = '',
 		this.twicePassword = ''
 	}

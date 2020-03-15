@@ -3,12 +3,15 @@
  */
 export default class LoginParamater {
 
-	public id: string
+	public accountId: string
+
+	public mailAddress: string
 	
 	public password: string
 	
 	constructor() {
-        this.id = '',
+		this.accountId = '',
+		this.mailAddress = '',
         this.password = ''
 	}
 }

@@ -6,6 +6,11 @@ Vue.use((v) => {
   v.prototype.$axios = axios
 })
 
+// axios.interceptors.response.use((response) => {
+//   console.log(response)
+//   return response.data
+// })
+
 declare module 'vue/types/vue' {
   interface Vue {
     $axios: AxiosInstance
@@ -66,3 +71,4 @@ declare module 'vue/types/vue' {
 //     return Promise.reject(error)
 //   },
 // )
+
