@@ -7,17 +7,26 @@
       <div class="b-header-menu">
         <el-menu default-active="1" mode="horizontal">
           <el-menu-item index="1">首页</el-menu-item>
+          <el-menu-item index="2">热门</el-menu-item>
+          <el-menu-item index="3">我的投稿</el-menu-item>
         </el-menu>
       </div>
+
       <div class="b-header-user">
-        <el-button type="primary" size="mini" round @click="clickEventShowLoginDialog">登录</el-button>
+        <div v-show="nickName == null">
+          <el-button type="primary" size="mini" round @click="clickEventShowLoginDialog">登录</el-button>
+        </div>
+        <div v-show="nickName != null">
+          <span>{{nickName}}</span>
+        </div>
+        <el-button icon="el-icon-edit" size="mini" @click="$router.push({name: 'subscribe'})">投稿</el-button>
       </div>
     </div>
-    <login :show="showLoginDialog" @close="showLoginDialog = false"></login>
+    <login :show="showLoginDialog" @close="showLoginDialog = false" @permision="loginSuccess()"></login>
+
   </div>
 </template>
 <script lang="ts">
-// import mix from "./ToolBar";
 import { Vue, Component } from "vue-property-decorator";
 import Login from "@/components/pages/login/Login.vue";
 
@@ -29,13 +38,24 @@ import Login from "@/components/pages/login/Login.vue";
 export default class Header extends Vue {
   // 登录页面表示控制(true: 打开;false:关闭)
   showLoginDialog: boolean = false;
+  get nickName() {
+    return sessionStorage.getItem("nickName") as string;
+  }
 
   /**
    * 登录页面打开事件
    */
   clickEventShowLoginDialog() {
     // 登录页面打开
-    this.showLoginDialog = true
+    this.showLoginDialog = true;
+  }
+
+  /**
+   * 登录成功
+   */
+  loginSuccess() {
+    // 登录页面关闭
+    this.showLoginDialog = false;
   }
 }
 </script>
@@ -50,7 +70,7 @@ export default class Header extends Vue {
   /** 项目对齐一行 */
   display: flex;
   /** header宽度 */
-  width: 1000px;
+  width: 1200px;
   /** header高度 */
   height: 60px;
   /** header居中 */
@@ -65,5 +85,6 @@ export default class Header extends Vue {
   flex: 1;
   display: -webkit-box;
   justify-content: flex-end;
+  align-items: center;
 }
 </style>

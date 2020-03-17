@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 <template>
   <el-dialog :visible="show" width="400px" center @open="initLogin()" @close="clickEventClose()">
     <el-form v-if="loginMode == '1'">
@@ -97,6 +96,8 @@ import RegisterParamater from "@/types/login/RegisterParamater";
 import ResetParamater from "@/types/login/ResetParamater"
 // eslint-disable-next-line no-unused-vars
 import BaseResult from '@/types/common/BaseResult'
+// eslint-disable-next-line no-unused-vars
+import LoginResult from '@/types/login/LoginResult'
 import * as _ from "lodash";
 @Component
 export default class Login extends Vue {
@@ -266,14 +267,18 @@ export default class Login extends Vue {
     }
     this.$axios.post('/user/login', param)
       .then(response=> {
-        var result = response.data as BaseResult
+        var result = response.data as LoginResult
         if (result.result == "OK") {
           this.$message.success("登录成功!");
-          this.$emit("close");
+          sessionStorage.setItem('token', result.token)
+          sessionStorage.setItem('accountId', result.accountId)
+          sessionStorage.setItem('mailAddress', result.mailAddress)
+          sessionStorage.setItem('nickName', result.nickName)
+          this.$emit("permision");
         }
       })  
       .catch(error=>{
-        var result = error.response.data as BaseResult
+        var result = error.response.data as LoginResult
         // error数据存在
         if (result && result.errorDto && result.errorDto.errors.length > 0) {
           result.errorDto.errors.forEach(msg => {
