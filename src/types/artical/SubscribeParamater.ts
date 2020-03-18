@@ -9,15 +9,15 @@ export default class SubscribeParamater {
 	
 	public isPrivate: boolean
 
-	public artical: string
+	public article: string
 
-	public articalId: string
+	public articleId: string
 	
 	constructor() {
 		this.title = '',
 		this.tag = '',
 		this.isPrivate = false,
-		this.artical = '',
-		this.articalId = ''
+		this.article = '',
+		this.articleId = ''
 	}
 }

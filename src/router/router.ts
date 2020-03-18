@@ -22,6 +22,11 @@ const router: Router = new Router({
         name: 'subscribe',
         component: resolve => import(`@/components/pages/artical/Writing.vue`),
       },
+      {
+        path: '/creater',
+        name: 'creater',
+        component: resolve => import(`@/components/pages/creater/PersonalHome.vue`),
+      },
     ],
   },
 ]

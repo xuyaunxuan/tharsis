@@ -1,15 +1,16 @@
 <template>
-<div>
+  <div>
+      <a class="main-nav-logo" href="/">
+        <img alt="logo"  src="@/assets/maintenance.gif" width="20%" />
+      </a>
     <div  v-for="(n,index) in test" v-bind:key="index">
         <summary-panel :title="n.t" :summary="n.s"></summary-panel>
     </div>
 
-</div>
-
- 
+  </div>
 </template>
 <script lang="ts">
-import { Component,  Vue } from "vue-property-decorator";
+import { Component, Vue } from "vue-property-decorator";
 import SummaryPanel from "@/components/core/SummaryPanel.vue";
 
 @Component({
@@ -17,7 +18,7 @@ import SummaryPanel from "@/components/core/SummaryPanel.vue";
     SummaryPanel
   }
 })
-export default class Overview extends Vue {
+export default class PersonalHome extends Vue {
   test: any = [
     {
       t: "申し訳ございません。",

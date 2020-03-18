@@ -5,10 +5,10 @@
         <img alt="logo" height="32" src="@/assets/logo.svg" />
       </a>
       <div class="b-header-menu">
-        <el-menu default-active="1" mode="horizontal">
-          <el-menu-item index="1">首页</el-menu-item>
-          <el-menu-item index="2">热门</el-menu-item>
-          <el-menu-item index="3">我的投稿</el-menu-item>
+        <el-menu default-active="/" :router="true" mode="horizontal">
+          <el-menu-item index="/">首页</el-menu-item>
+          <el-menu-item index="/subscribe">热门</el-menu-item>
+          <el-menu-item index="/creater">我的投稿</el-menu-item>
         </el-menu>
       </div>
 

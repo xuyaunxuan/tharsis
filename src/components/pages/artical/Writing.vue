@@ -1,19 +1,19 @@
 <template>
-  <div class="subscribe">
+  <div class="home">
     <mavon-editor
       v-model="articalValue"
       :toolbars="markdownOption"
       @save="clickEventSubscribe"
       @change="hasChangeFlg = true"
     />
-    <subscribe :show="showSubscribeDialog" @close="showSubscribeDialog = false" :articalValue="articalValue" :articalRenderValue="articalRenderValue"></subscribe>
+    <subscribe :show="showSubscribeDialog" @close="showSubscribeDialog = false" :articalValue="articalValue" :articalRenderValue="articalRenderValue" @saved="subscribeSuccess()"></subscribe>
     <login :show="showLoginDialog" @close="showLoginDialog = false" @permision="loginSuccess()"></login>
   </div>
 </template>
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import Login from "@/components/pages/login/Login.vue";
-import Subscribe from "@/components/pages/artical/Subscribe.vue";
+import Subscribe from "@/components/core/Subscribe.vue";
 import * as _ from "lodash";
 
 @Component({
@@ -92,17 +92,13 @@ export default class Writing extends Vue {
       this.showSubscribeDialog = true;
     }
   }
+  /**
+   * 文章投稿成功
+   */
+  subscribeSuccess() {
+    this.showSubscribeDialog = false;
+  }
 }
 </script>
-<style scoped>
-.subscribe {
-  margin-top: 10px;
-}
-/* .title-font {
-  font-weight: 500;
-  font-size: 18px;
-} */
-/* .el-form-item__label {
-    color: #606266;
-} */
+<style>
 </style>

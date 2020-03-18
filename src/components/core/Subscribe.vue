@@ -50,6 +50,24 @@ export default class Subscribe extends Vue {
   clickEventSubscribe() {
     // 验证有错，返回
     if (this.validateSbuscribe()) return;
+    this.subscribeParamater.article = this.articalValue
+
+    // 发送注册请求
+    this.$axios.post('/b/subscribe', this.subscribeParamater)
+      .then(response=> {
+        var result = response.data
+        if (result.result == "OK") {
+          this.$message.success("保存成功!");
+          this.$emit("saved");
+        }
+      })  
+      .catch(error=>{
+        var result = error.response.data
+        // error数据存在
+        if (result && result.errorDto && result.errorDto.errors.length > 0) {
+           this.$message.error(result.errorDto.errors[0]);
+        }
+      });
   }
   /**
    * 输入数据重置
@@ -72,8 +90,6 @@ export default class Subscribe extends Vue {
       this.$message.error("请输入标题");
       return true
     }
-
-    this.$message.error("TODO 投稿");
 
     return false
   }
