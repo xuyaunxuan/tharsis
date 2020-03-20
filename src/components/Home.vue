@@ -1,5 +1,5 @@
 <template>
-  <div >
+  <div>
     <my-header />
     <div class="home">
       <router-view></router-view>
@@ -9,11 +9,11 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
-import  Header  from "@/components/core/Header.vue";
+import Header from "@/components/core/Header.vue";
 @Component({
   components: {
-    'my-header': Header
-  },
+    "my-header": Header
+  }
 })
 export default class Home extends Vue {
   @Prop() private msg!: string;
@@ -21,8 +21,9 @@ export default class Home extends Vue {
 </script>
 <style >
 .home {
+  background: #ffffff;
   /** header宽度 */
-  width: 1200px;
+  width: 1300px;
   /** header居中 */
   margin: 0 auto;
   /** 项目居中 */

@@ -70,7 +70,7 @@ export default class Header extends Vue {
   /** 项目对齐一行 */
   display: flex;
   /** header宽度 */
-  width: 1200px;
+  width: 1300px;
   /** header高度 */
   height: 60px;
   /** header居中 */
