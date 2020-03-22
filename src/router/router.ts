@@ -20,8 +20,14 @@ const router: Router = new Router({
       {
         path: '/subscribe',
         name: 'subscribe',
-        component: resolve => import(`@/components/pages/artical/Writing.vue`),
+        component: resolve => import(`@/components/pages/article/Writing.vue`),
       },
+      {
+        path: '/post/:post_id',
+        name: 'post',
+        component: resolve => import(`@/components/pages/article/ArticleDetail.vue`),
+      },
+      // /user/:username/post/:post_id
       {
         path: '/creater',
         name: 'creater',

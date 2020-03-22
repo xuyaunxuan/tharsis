@@ -27,22 +27,43 @@
   </el-drawer>
 </template>
 <script lang="ts">
-import { Component, Prop, Vue } from "vue-property-decorator";
-import SubscribeParamater from "@/types/artical/SubscribeParamater.ts";
+import { Component, Prop, Vue, Watch } from "vue-property-decorator";
+import SubscribeParamater from "@/types/article/SubscribeParamater.ts";
 import * as _ from "lodash";
 @Component
 export default class Subscribe extends Vue {
   // 投稿页面开关
   @Prop({ default: false })
   show: boolean = false;
+  @Prop()
+  articlePath!: string
   // 投稿文本
-  @Prop({ default: "" })
-  articalValue: string = "";
+  @Prop()
+  articleValue!: string;
   // 投稿markdown文本
-  @Prop({ default: "" })
-  articalRenderValue: string = "";
+  @Prop()
+  articleRenderValue!: string;
+  @Prop()
+  title!: string;
+  @Prop()
+  tag!: string;
+  @Prop()
+  isPrivate!: boolean;
   // 投稿请求接口
   subscribeParamater: SubscribeParamater = new SubscribeParamater();
+  @Watch("show")
+  onDisplay() {
+    console.log(this.articlePath)
+    console.log(this.articleValue)
+    if (this.show && !_.isEmpty(this.articlePath)) {
+      this.subscribeParamater.articlePath = JSON.parse(JSON.stringify(this.articlePath))
+      this.subscribeParamater.title = JSON.parse(JSON.stringify(this.title));
+      this.subscribeParamater.tag = JSON.parse(JSON.stringify(this.tag));
+      if (this.isPrivate) {
+        this.subscribeParamater.isPrivate = true;
+      }
+    }
+  }
 
   /**
    * 投稿
@@ -50,25 +71,49 @@ export default class Subscribe extends Vue {
   clickEventSubscribe() {
     // 验证有错，返回
     if (this.validateSbuscribe()) return;
-    this.subscribeParamater.article = this.articalValue;
+    this.subscribeParamater.articleOri = JSON.parse(JSON.stringify(this.articleValue));
+    this.subscribeParamater.article = JSON.parse(JSON.stringify(this.articleRenderValue));
+    if (_.isEmpty(this.articlePath)) {
+      // 投稿
+      this.$axios
+        .post("/b/subscribe", this.subscribeParamater)
+        .then(response => {
+          var result = response.data;
+          if (result.result == "OK") {
+            this.$message.success("保存成功!");
+            this.$emit("saved");
+          }
+        })
+        .catch(error => {
+          var result = error.response.data;
+          // error数据存在
+          if (result && result.errorDto && result.errorDto.errors.length > 0) {
+            this.$message.error(result.errorDto.errors[0]);
+          }
+        });
+    } else {
+      this.subscribeParamater.articlePath = JSON.parse(JSON.stringify(this.articlePath));
+      // 编辑投稿
+      this.$axios
+        .post("/b/editArticles", this.subscribeParamater)
+        .then(response => {
+          var result = response.data;
+          if (result.result == "OK") {
+            this.$message.success("保存成功!");
+            this.$emit("saved");
+          }
+        })
+        .catch(error => {
+          var result = error.response.data;
+          // error数据存在
+          if (result && result.errorDto && result.errorDto.errors.length > 0) {
+            this.$message.error(result.errorDto.errors[0]);
+          }
+        });
+    }
 
-    // 发送注册请求
-    this.$axios
-      .post("/b/subscribe", this.subscribeParamater)
-      .then(response => {
-        var result = response.data;
-        if (result.result == "OK") {
-          this.$message.success("保存成功!");
-          this.$emit("saved");
-        }
-      })
-      .catch(error => {
-        var result = error.response.data;
-        // error数据存在
-        if (result && result.errorDto && result.errorDto.errors.length > 0) {
-          this.$message.error(result.errorDto.errors[0]);
-        }
-      });
+
+
   }
   /**
    * 输入数据重置

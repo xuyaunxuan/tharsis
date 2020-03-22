@@ -7,8 +7,8 @@
       <div class="b-header-menu">
         <el-menu default-active="/" :router="true" mode="horizontal">
           <el-menu-item index="/">首页</el-menu-item>
-          <el-menu-item index="/subscribe">热门</el-menu-item>
-          <el-menu-item index="/creater">我的投稿</el-menu-item>
+          <el-menu-item index="/creater">我的文章</el-menu-item>
+          <el-menu-item index="/subscribe">投稿</el-menu-item>
         </el-menu>
       </div>
 
@@ -70,7 +70,7 @@ export default class Header extends Vue {
   /** 项目对齐一行 */
   display: flex;
   /** header宽度 */
-  width: 1300px;
+  width: 1100px;
   /** header高度 */
   height: 60px;
   /** header居中 */

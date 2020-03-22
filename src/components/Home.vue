@@ -2,13 +2,13 @@
   <div>
     <my-header />
     <div class="home">
-      <router-view></router-view>
+      <router-view v-if="isRouterAlive"></router-view>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from "vue-property-decorator";
+import { Component, Vue,Provide } from "vue-property-decorator";
 import Header from "@/components/core/Header.vue";
 @Component({
   components: {
@@ -16,14 +16,21 @@ import Header from "@/components/core/Header.vue";
   }
 })
 export default class Home extends Vue {
-  @Prop() private msg!: string;
+  isRouterAlive: boolean = true;
+  @Provide('reload')
+  reload() {
+    this.isRouterAlive = false;
+    this.$nextTick(function() {
+      this.isRouterAlive = true;
+    });
+  }
 }
 </script>
 <style >
 .home {
   background: #ffffff;
   /** header宽度 */
-  width: 1300px;
+  width: 1100px;
   /** header居中 */
   margin: 0 auto;
   /** 项目居中 */

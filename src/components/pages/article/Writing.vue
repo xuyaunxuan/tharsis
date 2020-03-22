@@ -1,12 +1,23 @@
 <template>
   <div class="home">
     <mavon-editor
-      v-model="articalValue"
+      v-model="articleValue"
       :toolbars="markdownOption"
       @save="clickEventSubscribe"
       @change="hasChangeFlg = true"
+      codeStyle="monokai-sublime"
     />
-    <subscribe :show="showSubscribeDialog" @close="showSubscribeDialog = false" :articalValue="articalValue" :articalRenderValue="articalRenderValue" @saved="subscribeSuccess()"></subscribe>
+    <subscribe
+      :show="showSubscribeDialog"
+      @close="showSubscribeDialog = false"
+      :articleValue="articleValue"
+      :articleRenderValue="articleRenderValue"
+      :title="title"
+      :tag="tag"
+      :isPrivate="isPrivate"
+      :articlePath="articlePath"
+      @saved="subscribeSuccess()"
+    ></subscribe>
     <login :show="showLoginDialog" @close="showLoginDialog = false" @permision="loginSuccess()"></login>
   </div>
 </template>
@@ -14,6 +25,8 @@
 import { Component, Vue } from "vue-property-decorator";
 import Login from "@/components/pages/login/Login.vue";
 import Subscribe from "@/components/core/Subscribe.vue";
+// eslint-disable-next-line no-unused-vars
+import ArticleDto from "@/types/article/ArticleDto";
 import * as _ from "lodash";
 
 @Component({
@@ -23,10 +36,18 @@ import * as _ from "lodash";
   }
 })
 export default class Writing extends Vue {
+  // postId
+  articlePath: string = "";
   // 文本
-  articalValue: string = "";
+  articleValue: string = "";
   // markdowm文本
-  articalRenderValue: string = "";
+  articleRenderValue: string = "";
+  // 标题
+  title: string = "";
+  // tag
+  tag: string = "";
+  // 私有
+  isPrivate: boolean = false;
   // 登录页面表示控制(true: 打开;false:关闭)
   showLoginDialog: boolean = false;
   // 变更状态显示(true: 有变更;false: 无变更)
@@ -65,6 +86,18 @@ export default class Writing extends Vue {
     preview: false // 预览
   };
 
+  beforeMount() {
+    var title = this.$route.params.title;
+    if (title != undefined) {
+      this.articlePath = this.$route.params.articlePath;
+      console.log(this.$route.params.content)
+      this.articleValue = this.$route.params.contentOri;
+      this.title = title;
+      this.tag = this.$route.params.tag;
+      this.isPrivate = this.$route.params.isPrivate == "0" ? false : true;
+    }
+  }
+
   /**
    * 登录成功
    */
@@ -79,8 +112,9 @@ export default class Writing extends Vue {
    * 保存点击事件
    */
   clickEventSubscribe(val: any, render: any) {
-    this.articalValue = val;
-    this.articalRenderValue = render;
+    console.log(val)
+    this.articleValue = val;
+    this.articleRenderValue = render;
     // 从session拿用户ID
     var accountId = sessionStorage.getItem("accountId") as string;
     // 用户没有登录，打开登录界面

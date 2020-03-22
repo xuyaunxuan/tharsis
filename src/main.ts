@@ -2,6 +2,7 @@ import Vue from 'vue'
 import App from '@/App.vue'
 import router from '@/router/router';
 import '@/plugins/element-ui';
+import '@/plugins/high-lightjs'
 import '@/plugins/axios';
 import '@/styles/index.scss'
 import mavonEditor from 'mavon-editor'

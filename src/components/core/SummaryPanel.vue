@@ -1,58 +1,45 @@
 <template>
   <div class="summary">
+    <el-row v-if="fromUserHome" type="flex" justify="space-between">
+      <el-col class="summary-edit" :span="6">
+        <el-tag v-if="isPrivate == '0'">公开</el-tag>
+        <el-tag v-else type="info">私有</el-tag>
+      </el-col>
+      <el-col class="summary-edit" style="text-align: right" :span="6">
+        <el-button size="small" type="primary" @click="clickEditArticle">编辑</el-button>
+        <el-button size="small" type="danger"  @click="clickDeleteArticle">删除</el-button>
+      </el-col>
+      <!-- <div class="summary-edit">
+        <el-tag v-if="isPrivate == '0'">公开</el-tag>
+        <el-tag v-else type="info">私有</el-tag>
+        <el-button>编辑</el-button>
+      </div>-->
+    </el-row>
     <el-row>
       <div class="summary-title">
-        <a :href="'#/' + articlePath">{{title}}</a>
+        <a :href="'#/post/' + articlePath">{{title}}</a>
       </div>
     </el-row>
-    <el-row justify="space-between">
+    <el-row type="flex" justify="space-between">
       <el-col :span="6">
-<div class="summary-author">
-        <span>{{author + ' - ' + convertedTime}}</span>
-      </div>
+        <div class="summary-author">
+          <span>{{author + ' - ' + convertedTime}}</span>
+        </div>
       </el-col>
       <el-col :span="6">
-      <div class="summary-popular">
-        <span>点击量</span>
-      </div>  
+        <div class="summary-popular">
+          <el-tag type="info">{{tag}}</el-tag>
+        </div>
       </el-col>
-      
-      
     </el-row>
-    <!-- <table cellpadding="0" cellspacing="0" border="0" width="100%">
-        <tr>
-   
-          <td width="20"></td>
-          <td width="auto" valign="middle">
-            <span class="item_title">
-              <a
-                target="_blank"
-              >chrome 扩展 uBlock Adblock Plus 此扩展程序包含恶意软件</a>
-            </span>
-            <div class="sep5"></div>
-            <span class="topic_info">
-              <strong>
-                <a href="/member/vazo">vazo</a>
-              </strong> &nbsp;•&nbsp; 194 天前 &nbsp;•&nbsp; 最后回复来自
-              <strong>
-                <a href="/member/vazo">vazo</a>
-              </strong>
-            </span>
-          </td>
-          <td width="70" align="right" valign="middle">
-            <a href="/t/598770#reply6" class="count_livid">6</a>
-          </td>
-        </tr>
-    </table>-->
-    <!-- <el-divider  ></el-divider> -->
-    <!-- <span>{{title}}</span>
-      <li></li>
-      <span>{{summary}}</span>
-    <li></li>-->
   </div>
 </template>
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
+// eslint-disable-next-line no-unused-vars
+import ArticleGetResult from "@/types/article/ArticleGetResult";
+// eslint-disable-next-line no-unused-vars
+import ArticleDto from "@/types/article/ArticleDto";
 @Component
 export default class SummaryPanel extends Vue {
   // 标题
@@ -70,12 +57,62 @@ export default class SummaryPanel extends Vue {
   // 发布时间
   @Prop()
   postTime!: Date;
+  @Prop()
+  tag!: string;
+  // 从用户画面迁移
+  @Prop()
+  fromUserHome!: boolean;
+  @Prop()
+  // 0:公开文章1:私有文章
+  isPrivate!: string;
   // 距离发布经过时间
   convertedTime: string = "";
 
   beforeMount() {
     // 计算距离发布经过时间
     this.getPastedTime();
+  }
+
+  // 编辑用户文章
+  clickEditArticle() {
+    this.$axios
+      .get("/b/articleDetail", {
+        params: { post: this.articlePath }
+      })
+      .then(response => {
+        var result = response.data as ArticleGetResult;
+        if (result.result == "OK") {
+          this.$router.push({ name: "subscribe", params: result.articles[0] });
+        }
+      })
+      .catch(error => {
+        var result = error.response.data;
+        // error数据存在
+        if (result && result.errorDto && result.errorDto.errors.length > 0) {
+          this.$message.error(result.errorDto.errors[0]);
+        }
+      });
+  }
+
+  clickDeleteArticle() {
+    var param = {
+      articlePath : this.articlePath
+    }
+    this.$axios
+      .post("/b/deleteArticles", param)
+      .then(response => {
+        var result = response.data as ArticleGetResult;
+        if (result.result == "OK") {
+          this.$emit('delete')
+        }
+      })
+      .catch(error => {
+        var result = error.response.data;
+        // error数据存在
+        if (result && result.errorDto && result.errorDto.errors.length > 0) {
+          this.$message.error(result.errorDto.errors[0]);
+        }
+      });
   }
 
   /**
@@ -155,10 +192,11 @@ export default class SummaryPanel extends Vue {
   appendTime(year: number, day: number, hour: number, min: number) {
     if (year && year > 0) {
       this.convertedTime = year.toString() + " 年前";
-      return 
+      return;
     }
     if (day && day > 0) {
-      this.convertedTime = this.convertedTime + day.toString() + " 天";
+      this.convertedTime = this.convertedTime + day.toString() + " 天前";
+      return;
     }
     if (hour && hour > 0) {
       this.convertedTime = this.convertedTime + hour.toString() + " 小时";
@@ -167,7 +205,7 @@ export default class SummaryPanel extends Vue {
       this.convertedTime = this.convertedTime + min.toString() + " 分钟";
     }
     if (this.convertedTime.length > 0) {
-      this.convertedTime = this.convertedTime + "前"
+      this.convertedTime = this.convertedTime + "前";
     }
   }
 }
@@ -179,23 +217,28 @@ export default class SummaryPanel extends Vue {
 .summary:hover {
   box-shadow: 0 2px 6px rgba(26, 26, 26, 0.1);
 }
+.summary-edit {
+  padding: 20px 20px 0px 20px;
+}
 .summary-title {
   padding: 20px;
   font-size: 20px;
-  /* text-align: left; */
+  font-weight: 600;
+  text-align: left;
 }
 .summary-author {
-  padding: 20px;
+  padding: 22px;
 }
 .summary-popular {
-  padding: 20px;
-
+  padding: 22px;
+  text-align: right;
 }
 a {
+  color: #000000;
   text-decoration: none;
 }
-a:visited {
-  color: #000000;
+a:hover {
+  color: #95a5a6;
   text-decoration: none;
 }
 </style>

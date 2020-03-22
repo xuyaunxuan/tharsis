@@ -11,13 +11,19 @@ export default class SubscribeParamater {
 
 	public article: string
 
+	public articleOri: string
+
 	public articleId: string
+
+	public articlePath: string
 	
 	constructor() {
 		this.title = '',
 		this.tag = '',
 		this.isPrivate = false,
 		this.article = '',
+		this.articleOri = '',
 		this.articleId = ''
+		this.articlePath = ''
 	}
 }
