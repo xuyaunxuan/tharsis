@@ -7,7 +7,7 @@ module.exports = {
           publicPath: '/',
           // 模板来源
           template: 'src/template/index.html',
-          title: 'ikenLab - 技术宅'
+          title: 'ikenLab - 技术宅实验室'
         }
     },
     devServer: {

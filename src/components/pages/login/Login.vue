@@ -138,6 +138,8 @@ export default class Login extends Vue {
    * 登录页面关闭
    */
   clickClose() {
+    // 清除定时器
+    clearInterval(this.timer)
     this.timer = null;
     this.$emit("close");
   }

@@ -26,7 +26,6 @@
     <el-row>
       <div class="summary-title">
         <router-link :to="'/post/' + articlePath">{{title}}</router-link>
-        <!-- <a :href="'/post/' + articlePath">{{title}}</a> -->
       </div>
     </el-row>
     <el-row type="flex" justify="space-between">
@@ -98,7 +97,7 @@ export default class SummaryPanel extends Vue {
             params: {
               title: result.articles[0].title,
               articlePath: result.articles[0].articlePath,
-              contentOri: result.articles[0].articlePath,
+              contentOri: result.articles[0].contentOri,
               tag: result.articles[0].tag,
               isPrivate: result.articles[0].isPrivate
             }

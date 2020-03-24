@@ -33,6 +33,14 @@
     border-color: #FFF;
     color: #000000;
 }
+.el-input-group__append {
+    background: $header-focus-color;
+    border-color: $main-backg-color;
+}
+.el-input-group__append button.el-button {
+    background: $header-focus-color;
+    border-color: $header-focus-color;
+}
 
 // dialog background
 .el-dialog {
