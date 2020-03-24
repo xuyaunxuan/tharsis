@@ -1,6 +1,5 @@
 import Vue from 'vue';
 import Router from 'vue-router';
-import Error404 from '@/components/Error404.vue'
 
 Vue.use(Router);
 const router: Router = new Router({
@@ -38,7 +37,7 @@ const router: Router = new Router({
           name: 'mypage',
           component: resolve => import(`@/components/pages/creater/PersonalHome.vue`),
           meta: {
-            title: '主页'
+            title: '我的文章'
           }
         },
       ],
