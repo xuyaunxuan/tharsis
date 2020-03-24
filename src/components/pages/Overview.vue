@@ -9,7 +9,7 @@
         :tag="article.tag"
       ></summary-panel>
     </div>
-    <span v-if="isNoMore">没有更多文章了</span>
+    <span v-if="isNoMore">没有更多文章了...</span>
   </div>
 </template>
 <script lang="ts">
@@ -40,7 +40,7 @@ export default class Overview extends Vue {
     this.articleGetParamater.limit = 15;
     // 发送注册请求
     this.$axios
-      .post("/b/showArticles", this.articleGetParamater)
+      .post("v1/b/all/post", this.articleGetParamater)
       .then(response => {
         var result = response.data as ArticleGetResult;
         if (result.result == "OK" && result.articles != null) {
@@ -48,7 +48,7 @@ export default class Overview extends Vue {
             item.postTime = new Date(item.postTime);
             this.articles.push(item);
           });
-          
+
           if (this.isFirstLoad) {
             // 监听滚动事件
             window.addEventListener("scroll", this.scrollBottom);
@@ -68,7 +68,6 @@ export default class Overview extends Vue {
   }
 
   scrollBottom() {
-    
     //变量scrollTop是滚动条滚动时，距离顶部的距离
     var scrollTop =
       document.documentElement.scrollTop || document.body.scrollTop; //变量windowHeight是可视区的高度

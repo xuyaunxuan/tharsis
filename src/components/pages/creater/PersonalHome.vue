@@ -12,17 +12,19 @@
         @delete="handleDeleted()"
       ></summary-panel>
     </div>
-    <span v-if="isNoMore">没有更多文章了</span>
+    <span v-if="isNoMore">没有更多文章了...</span>
   </div>
 </template>
 <script lang="ts">
-import { Component, Vue,Inject } from "vue-property-decorator";
+import { Component, Vue, Inject } from "vue-property-decorator";
 import SummaryPanel from "@/components/core/SummaryPanel.vue";
 import ArticleGetParamater from "@/types/article/ArticleGetParamater";
 // eslint-disable-next-line no-unused-vars
 import ArticleGetResult from "@/types/article/ArticleGetResult";
 // eslint-disable-next-line no-unused-vars
 import ArticleDto from "@/types/article/ArticleDto";
+// eslint-disable-next-line no-unused-vars
+import BaseResult from "@/types/common/BaseResult";
 @Component({
   components: {
     SummaryPanel
@@ -33,22 +35,25 @@ export default class PersonalHome extends Vue {
   articles: ArticleDto[] = [];
   isNoMore: boolean = false;
   isFirstLoad: boolean = true;
-  @Inject('reload') doReload : any;
+  @Inject("reload") doReload: any;
   beforeMount() {
     this.getArticles();
   }
 
   handleDeleted() {
-    this.$message("删除成功")
-    this.doReload()
+    this.showSuccess("删除成功!");
+    this.doReload();
   }
 
+  /**
+   * 获取所有文章
+   */
   getArticles() {
     this.articleGetParamater.offset = this.articles.length;
     this.articleGetParamater.limit = 15;
     // 发送注册请求
     this.$axios
-      .post("/b/myArticles", this.articleGetParamater)
+      .post("v1/b/u/all/post", this.articleGetParamater)
       .then(response => {
         var result = response.data as ArticleGetResult;
         if (result.result == "OK" && result.articles != null) {
@@ -56,7 +61,7 @@ export default class PersonalHome extends Vue {
             item.postTime = new Date(item.postTime);
             this.articles.push(item);
           });
-          
+
           if (this.isFirstLoad) {
             // 监听滚动事件
             window.addEventListener("scroll", this.scrollBottom);
@@ -67,16 +72,20 @@ export default class PersonalHome extends Vue {
         }
       })
       .catch(error => {
-        var result = error.response.data;
+        var result = error.response.data as BaseResult;
         // error数据存在
         if (result && result.errorDto && result.errorDto.errors.length > 0) {
-          this.$message.error(result.errorDto.errors[0]);
+          result.errorDto.errors.forEach(msg => {
+            let _this = this;
+            setTimeout(function() {
+              _this.showMessage(msg);
+            }, 100);
+          });
         }
       });
   }
 
   scrollBottom() {
-    
     //变量scrollTop是滚动条滚动时，距离顶部的距离
     var scrollTop =
       document.documentElement.scrollTop || document.body.scrollTop; //变量windowHeight是可视区的高度
@@ -87,6 +96,26 @@ export default class PersonalHome extends Vue {
     if (scrollTop + windowHeight == scrollHeight && !this.isNoMore) {
       this.getArticles();
     }
+  }
+  /**
+   * 显示成功提示
+   */
+  showSuccess(msg: string) {
+    this.$notify({
+      title: msg,
+      message: "",
+      type: "success"
+    });
+  }
+  /**
+   * 显示错误提示
+   */
+  showMessage(msg: string) {
+    this.$notify({
+      title: msg,
+      message: "",
+      type: "error"
+    });
   }
 }
 </script>

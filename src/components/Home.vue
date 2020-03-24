@@ -28,11 +28,12 @@ export default class Home extends Vue {
 </script>
 <style >
 .home {
-  background: #ffffff;
+  background: #313131;
   /** header宽度 */
   width: 1100px;
   /** header居中 */
   margin: 0 auto;
+  margin-top: 2px;
   /** 项目居中 */
   align-items: center;
 }

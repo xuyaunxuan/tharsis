@@ -6,18 +6,27 @@
         <el-tag v-else type="info">私有</el-tag>
       </el-col>
       <el-col class="summary-edit" style="text-align: right" :span="6">
-        <el-button size="small" type="primary" @click="clickEditArticle">编辑</el-button>
-        <el-button size="small" type="danger"  @click="clickDeleteArticle">删除</el-button>
+        <el-button
+          size="medium"
+          type="primary"
+          icon="el-icon-edit"
+          @click="clickEditArticle"
+          circle
+        ></el-button>
+        <el-popconfirm
+          title="确定删除吗？"
+          cancelButtonType="default"
+          confirmButtonType="primary"
+          @onConfirm="clickDeleteArticle"
+        >
+          <el-button size="medium" type="primary" icon="el-icon-delete" slot="reference" circle></el-button>
+        </el-popconfirm>
       </el-col>
-      <!-- <div class="summary-edit">
-        <el-tag v-if="isPrivate == '0'">公开</el-tag>
-        <el-tag v-else type="info">私有</el-tag>
-        <el-button>编辑</el-button>
-      </div>-->
     </el-row>
     <el-row>
       <div class="summary-title">
-        <a :href="'#/post/' + articlePath">{{title}}</a>
+        <router-link :to="'/post/' + articlePath">{{title}}</router-link>
+        <!-- <a :href="'/post/' + articlePath">{{title}}</a> -->
       </div>
     </el-row>
     <el-row type="flex" justify="space-between">
@@ -28,7 +37,7 @@
       </el-col>
       <el-col :span="6">
         <div class="summary-popular">
-          <el-tag type="info">{{tag}}</el-tag>
+          <el-tag>{{tag}}</el-tag>
         </div>
       </el-col>
     </el-row>
@@ -40,6 +49,8 @@ import { Component, Prop, Vue } from "vue-property-decorator";
 import ArticleGetResult from "@/types/article/ArticleGetResult";
 // eslint-disable-next-line no-unused-vars
 import ArticleDto from "@/types/article/ArticleDto";
+// eslint-disable-next-line no-unused-vars
+import BaseResult from "@/types/common/BaseResult";
 @Component
 export default class SummaryPanel extends Vue {
   // 标题
@@ -76,13 +87,22 @@ export default class SummaryPanel extends Vue {
   // 编辑用户文章
   clickEditArticle() {
     this.$axios
-      .get("/b/articleDetail", {
+      .get("v1/b/detail", {
         params: { post: this.articlePath }
       })
       .then(response => {
         var result = response.data as ArticleGetResult;
         if (result.result == "OK") {
-          this.$router.push({ name: "subscribe", params: result.articles[0] });
+          this.$router.push({
+            name: "subscribe",
+            params: {
+              title: result.articles[0].title,
+              articlePath: result.articles[0].articlePath,
+              contentOri: result.articles[0].articlePath,
+              tag: result.articles[0].tag,
+              isPrivate: result.articles[0].isPrivate
+            }
+          });
         }
       })
       .catch(error => {
@@ -94,23 +114,31 @@ export default class SummaryPanel extends Vue {
       });
   }
 
+  /**
+   * 文章删除
+   */
   clickDeleteArticle() {
     var param = {
-      articlePath : this.articlePath
-    }
+      articlePath: this.articlePath
+    };
     this.$axios
-      .post("/b/deleteArticles", param)
+      .post("v1/b/u/del/post", param)
       .then(response => {
         var result = response.data as ArticleGetResult;
         if (result.result == "OK") {
-          this.$emit('delete')
+          this.$emit("delete");
         }
       })
       .catch(error => {
-        var result = error.response.data;
+        var result = error.response.data as BaseResult;
         // error数据存在
         if (result && result.errorDto && result.errorDto.errors.length > 0) {
-          this.$message.error(result.errorDto.errors[0]);
+          result.errorDto.errors.forEach(msg => {
+            let _this = this;
+            setTimeout(function() {
+              _this.showMessage(msg);
+            }, 100);
+          });
         }
       });
   }
@@ -184,7 +212,7 @@ export default class SummaryPanel extends Vue {
   calcmin(offset: number): number[] {
     var vals: number[] = [];
     var oneMin = 60 * 1000;
-    var mins = Math.floor(offset / oneMin);
+    var mins = Math.ceil(offset / oneMin);
     vals.push(mins);
     vals.push(offset - mins * oneMin);
     return vals;
@@ -208,37 +236,21 @@ export default class SummaryPanel extends Vue {
       this.convertedTime = this.convertedTime + "前";
     }
   }
+  showMessage(msg: string) {
+    this.$notify({
+      title: msg,
+      message: "",
+      type: "error"
+    });
+  }
+  showSuccess(msg: string) {
+    this.$notify({
+      title: msg,
+      message: "",
+      type: "success"
+    });
+  }
 }
 </script>
 <style>
-.summary {
-  border-bottom: 1px solid rgba(26, 26, 26, 0.1);
-}
-.summary:hover {
-  box-shadow: 0 2px 6px rgba(26, 26, 26, 0.1);
-}
-.summary-edit {
-  padding: 20px 20px 0px 20px;
-}
-.summary-title {
-  padding: 20px;
-  font-size: 20px;
-  font-weight: 600;
-  text-align: left;
-}
-.summary-author {
-  padding: 22px;
-}
-.summary-popular {
-  padding: 22px;
-  text-align: right;
-}
-a {
-  color: #000000;
-  text-decoration: none;
-}
-a:hover {
-  color: #95a5a6;
-  text-decoration: none;
-}
 </style>

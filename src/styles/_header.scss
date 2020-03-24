@@ -1,0 +1,33 @@
+.b-header {
+    min-width: max-content;
+    min-width: -moz-max-content;
+    position: relative;
+    background: $header-color;
+    // box-shadow: 0 1px 3px rgba(26, 26, 26, 0.1);
+    -webkit-box-align: center;
+    width: 100%;
+}
+
+.b-header-content {
+    /** 项目对齐一行 */
+    display: flex;
+    /** header宽度 */
+    width: 1100px;
+    /** header高度 */
+    height: 60px;
+    /** header居中 */
+    margin: 0 auto;
+    /** 项目居中 */
+    align-items: center;
+}
+
+.b-header-menu {
+    margin-left: 25px;
+}
+
+.b-header-user {
+    flex: 1;
+    display: -webkit-box;
+    justify-content: flex-end;
+    align-items: center;
+}

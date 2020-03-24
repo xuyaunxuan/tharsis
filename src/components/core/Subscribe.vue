@@ -12,8 +12,8 @@
         <el-form-item label="仅自己可见">
           <el-switch
             v-model="subscribeParamater.isPrivate"
-            active-color="#13ce66"
-            inactive-color="#dcdfe6"
+            active-color="#919191"
+            inactive-color="#121212"
           ></el-switch>
         </el-form-item>
         <el-form-item>
@@ -30,6 +30,8 @@
 import { Component, Prop, Vue, Watch } from "vue-property-decorator";
 import SubscribeParamater from "@/types/article/SubscribeParamater.ts";
 import * as _ from "lodash";
+// eslint-disable-next-line no-unused-vars
+import BaseResult from "@/types/common/BaseResult";
 @Component
 export default class Subscribe extends Vue {
   // 投稿页面开关
@@ -53,8 +55,6 @@ export default class Subscribe extends Vue {
   subscribeParamater: SubscribeParamater = new SubscribeParamater();
   @Watch("show")
   onDisplay() {
-    console.log(this.articlePath)
-    console.log(this.articleValue)
     if (this.show && !_.isEmpty(this.articlePath)) {
       this.subscribeParamater.articlePath = JSON.parse(JSON.stringify(this.articlePath))
       this.subscribeParamater.title = JSON.parse(JSON.stringify(this.title));
@@ -76,38 +76,48 @@ export default class Subscribe extends Vue {
     if (_.isEmpty(this.articlePath)) {
       // 投稿
       this.$axios
-        .post("/b/subscribe", this.subscribeParamater)
+        .post("v1/b/u/post", this.subscribeParamater)
         .then(response => {
           var result = response.data;
           if (result.result == "OK") {
-            this.$message.success("保存成功!");
+            this.showSuccess("保存成功!");
             this.$emit("saved");
           }
         })
         .catch(error => {
-          var result = error.response.data;
+          var result = error.response.data as BaseResult;
           // error数据存在
           if (result && result.errorDto && result.errorDto.errors.length > 0) {
-            this.$message.error(result.errorDto.errors[0]);
+            result.errorDto.errors.forEach(msg => {
+              let _this = this;
+              setTimeout(function() {
+                _this.showMessage(msg);
+              }, 100);
+            });
           }
         });
     } else {
       this.subscribeParamater.articlePath = JSON.parse(JSON.stringify(this.articlePath));
       // 编辑投稿
       this.$axios
-        .post("/b/editArticles", this.subscribeParamater)
+        .post("v1/b/u/edit", this.subscribeParamater)
         .then(response => {
           var result = response.data;
           if (result.result == "OK") {
-            this.$message.success("保存成功!");
+            this.showSuccess("保存成功!");
             this.$emit("saved");
           }
         })
         .catch(error => {
-          var result = error.response.data;
+          var result = error.response.data as BaseResult;
           // error数据存在
           if (result && result.errorDto && result.errorDto.errors.length > 0) {
-            this.$message.error(result.errorDto.errors[0]);
+            result.errorDto.errors.forEach(msg => {
+              let _this = this;
+              setTimeout(function() {
+                _this.showMessage(msg);
+              }, 100);
+            });
           }
         });
     }
@@ -133,11 +143,25 @@ export default class Subscribe extends Vue {
    */
   validateSbuscribe(): boolean {
     if (_.isEmpty(this.subscribeParamater.title)) {
-      this.$message.error("请输入标题");
+      this.showMessage("请输入标题")
       return true;
     }
 
     return false;
+  }
+  showMessage(msg: string) {
+    this.$notify({
+      title: msg,
+      message: "",
+      type: "error"
+    });
+  }
+  showSuccess(msg: string) {
+    this.$notify({
+      title: msg,
+      message: "",
+      type: "success"
+    });
   }
 }
 </script>

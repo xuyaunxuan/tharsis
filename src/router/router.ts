@@ -4,60 +4,58 @@ import Error404 from '@/components/Error404.vue'
 
 Vue.use(Router);
 const router: Router = new Router({
-  // mode: 'history',
+  mode: 'history',
   base: process.env.BASE_URL,
   routes: [
-  {
-    path: '/',
-    redirect: 'overview',
-    component: resolve => import(`@/components/Home.vue`),
-    children: [
-      {
-        path: '/',
-        name: 'overview',
-        component: resolve => import(`@/components/pages/Overview.vue`),
-      },
-      {
-        path: '/subscribe',
-        name: 'subscribe',
-        component: resolve => import(`@/components/pages/article/Writing.vue`),
-      },
-      {
-        path: '/post/:post_id',
-        name: 'post',
-        component: resolve => import(`@/components/pages/article/ArticleDetail.vue`),
-      },
-      // /user/:username/post/:post_id
-      {
-        path: '/creater',
-        name: 'creater',
-        component: resolve => import(`@/components/pages/creater/PersonalHome.vue`),
-      },
-    ],
-  },
-]
+    {
+      path: '/',
+      redirect: 'overview',
+      component: resolve => import(`@/components/Home.vue`),
+      children: [
+        {
+          path: '/',
+          name: 'overview',
+          component: resolve => import(`@/components/pages/Overview.vue`),
+          meta: {
+            title: '技术宅实验室'
+          }
+        },
+        {
+          path: '/subscribe',
+          name: 'subscribe',
+          component: resolve => import(`@/components/pages/article/Writing.vue`),
+          meta: {
+            title: '投稿'
+          }
+        },
+        {
+          path: '/post/:post_id',
+          name: 'post',
+          component: resolve => import(`@/components/pages/article/ArticleDetail.vue`),
+        },
+        {
+          path: '/mypage',
+          name: 'mypage',
+          component: resolve => import(`@/components/pages/creater/PersonalHome.vue`),
+          meta: {
+            title: '主页'
+          }
+        },
+      ],
+    },
+  ]
 })
-
-
-
 
 export default router
 
-// export default new Router({
-//   mode: 'history',
-//   base: process.env.BASE_URL,
-//   routes: [
-//     {
-//       path: '/',
-//       name: 'home'
-//     },
-//     {
-//       path: '/about',
-//       name: 'about',
-//       // route level code-splitting
-//       // this generates a separate chunk (about.[hash].js) for this route
-//       // which is lazy-loaded when the route is visited.
-//       component: () => import(/* webpackChunkName: "about" */ './views/About.vue'),
-//     },
-//   ],
-// });
+router.beforeEach((to, from, next) => {
+  if ((to.name !== 'overview' && to.name !== 'post') && sessionStorage.getItem('token') === null) {
+    next('/')
+  } else {
+    // 路由发生变化修改title
+    if (to.meta.title) {
+      document.title = 'ikenLab - ' + to.meta.title
+    }
+    next()
+  }
+})

@@ -3,6 +3,8 @@
     <mavon-editor
       v-model="articleValue"
       :toolbars="markdownOption"
+      previewBackground="#313131"
+      toolbarsBackground="#313131"
       @save="clickEventSubscribe"
       @change="hasChangeFlg = true"
       codeStyle="monokai-sublime"
@@ -90,7 +92,6 @@ export default class Writing extends Vue {
     var title = this.$route.params.title;
     if (title != undefined) {
       this.articlePath = this.$route.params.articlePath;
-      console.log(this.$route.params.content)
       this.articleValue = this.$route.params.contentOri;
       this.title = title;
       this.tag = this.$route.params.tag;
@@ -112,7 +113,6 @@ export default class Writing extends Vue {
    * 保存点击事件
    */
   clickEventSubscribe(val: any, render: any) {
-    console.log(val)
     this.articleValue = val;
     this.articleRenderValue = render;
     // 从session拿用户ID
@@ -131,8 +131,13 @@ export default class Writing extends Vue {
    */
   subscribeSuccess() {
     this.showSubscribeDialog = false;
+    this.$router.push("mypage");
   }
 }
 </script>
 <style>
+.mavonEditor {
+  width: 100%;
+  height: 100%;
+}
 </style>

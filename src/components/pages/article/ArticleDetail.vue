@@ -13,7 +13,7 @@
     </el-row>
     <div class="article-content" v-html="articleDto.content" v-highlight>{{articleDto.content}}</div>
     <div class="modify-time">
-      <span>编辑于  {{updateTime}}</span>
+      <span>编辑于 {{updateTime}}</span>
     </div>
   </el-form>
 </template>
@@ -33,15 +33,20 @@ export default class ArticleDetail extends Vue {
   updateTime: string = "";
   beforeMount() {
     this.$axios
-      .get("/b/articleDetail", {
+      .get("v1/b/detail", {
         params: { post: this.$route.params.post_id }
       })
       .then(response => {
         var result = response.data as ArticleGetResult;
         if (result.result == "OK") {
           this.articleDto = result.articles[0];
-          this.postTime =this.formatTime(new Date(result.articles[0].postTime))
-          this.updateTime = this.formatTime(new Date(result.articles[0].updateTime))
+          this.postTime = this.formatTime(
+            new Date(result.articles[0].postTime)
+          );
+          this.updateTime = this.formatTime(
+            new Date(result.articles[0].updateTime)
+          );
+          document.title = "ikenLab - " + this.articleDto.title;
         }
       })
       .catch(error => {
@@ -54,13 +59,20 @@ export default class ArticleDetail extends Vue {
   }
 
   // 转换显示日期
-  formatTime(postTime : Date) :string{
-    var now = new Date()
+  formatTime(postTime: Date): string {
+    var now = new Date();
     // 判断是否今年
     if (postTime.getFullYear() == now.getFullYear()) {
-      return (postTime.getMonth() + 1) + "月" + postTime.getDate() + "日"
+      return postTime.getMonth() + 1 + "月" + postTime.getDate() + "日";
     } else {
-      return postTime.getFullYear() + "年" + (postTime.getMonth() + 1) + "月" + postTime.getDate() + "日"
+      return (
+        postTime.getFullYear() +
+        "年" +
+        (postTime.getMonth() + 1) +
+        "月" +
+        postTime.getDate() +
+        "日"
+      );
     }
   }
 }
@@ -78,5 +90,4 @@ export default class ArticleDetail extends Vue {
 .article-content {
   padding: 30px 22px 0px 22px;
 }
-
 </style>

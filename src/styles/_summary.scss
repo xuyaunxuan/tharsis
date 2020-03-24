@@ -1,0 +1,27 @@
+.summary {
+    border-bottom: 2px solid rgba(26, 26, 26, 0.1);
+}
+
+.summary:hover {
+    box-shadow: 0 3px 6px rgba(26, 26, 26, 0.1);
+}
+
+.summary-edit {
+    padding: 20px 20px 0px 20px;
+}
+
+.summary-title {
+    padding: 20px;
+    font-size: 20px;
+    font-weight: 600;
+    text-align: left;
+}
+
+.summary-author {
+    padding: 22px;
+}
+
+.summary-popular {
+    padding: 22px;
+    text-align: right;
+}

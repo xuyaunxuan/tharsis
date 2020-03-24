@@ -1,0 +1,157 @@
+// menu css
+.el-menu.el-menu--horizontal {
+    border-bottom: 0px !important;
+}
+
+// button primary
+.el-button--primary {
+    background-color: $header-color;
+    border-color: $header-color;
+    color: $header-font;
+}
+
+// button primary focus
+.el-button--primary:focus,
+.el-button--primary:hover {
+    background: $header-focus-color;
+    border-color: $header-focus-color;
+    color: #FFF;
+}
+
+// button default focus
+.el-button--default,
+.el-button--default {
+    background: $main-backg-color;
+    border-color: $main-backg-color;
+    color: #FFF;
+}
+
+// button default focus
+.el-button--default:focus,
+.el-button--default:hover {
+    background: #FFF;
+    border-color: #FFF;
+    color: #000000;
+}
+
+// dialog background
+.el-dialog {
+    background: $header-color;
+}
+
+// dialog close color
+.el-dialog__headerbtn .el-dialog__close {
+    color: $header-font;
+}
+
+.el-dialog__headerbtn .el-dialog__close:hover,
+.el-dialog__headerbtn .el-dialog__close:focus {
+    color: $header-font;
+}
+
+// notify color
+.el-notification {
+    background-color: $header-color;
+    border: 1px solid $header-color;
+}
+
+.el-notification__title {
+    color: #ffffff;
+    font-size: 13px;
+}
+
+// input color
+.el-input__inner {
+    background-color: $main-backg-color;
+    border: 1px solid $main-backg-color;
+    color: #ffffff;
+}
+
+.el-input__inner:focus {
+    background-color: $main-backg-color;
+    border: 1px solid $main-backg-color;
+    color: #ffffff;
+}
+
+// tag color
+.el-tag {
+    background-color: $main-backg-color;
+    border: 1px solid $main-backg-color;
+    color: #919191
+}
+
+.el-tag.el-tag--info {
+    background-color: $main-backg-color;
+    border: 1px solid $main-backg-color;
+    color: #919191
+}
+
+// 确认提示
+.el-popover {
+    background-color: $header-color;
+    border: 1px solid $header-color;
+    color: $header-font;
+}
+
+.el-popper .popper__arrow,
+.el-popper .popper__arrow::after {
+    background-color: $header-color;
+    border: 1px solid $header-color;
+}
+
+// drawer
+.el-drawer {
+    background-color: $header-color;
+    border: 1px solid $header-color;
+}
+
+// 边框focus颜色
+:focus {
+    outline:0 !important;
+}
+
+// markdown
+.v-note-wrapper {
+    background-color: $header-color !important;
+
+}
+
+.v-note-wrapper .v-note-op {
+    border-bottom: 1px solid $header-color !important;
+}
+
+.content-input-wrapper {
+    background-color: $header-color !important;
+}
+
+.v-note-wrapper .v-note-panel .v-note-edit.divarea-wrapper.scroll-style::-webkit-scrollbar {
+    background-color: $main-backg-color !important;
+}
+
+.markdown-body {
+    color: $header-font !important;
+}
+
+.markdown-body pre {
+    background-color: $header-color !important;
+}
+
+.v-note-wrapper .v-note-op .v-left-item .op-icon-divider,
+.v-note-wrapper .v-note-op .v-right-item .op-icon-divider {
+    border-left: 0px !important;
+}
+
+a {
+    color: #000000;
+    text-decoration: none;
+}
+
+a:hover {
+    color: $header-font;
+    text-decoration: none;
+}
+
+textarea {
+    background-color: $header-color;
+    color: $header-font !important;
+}
