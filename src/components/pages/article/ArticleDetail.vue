@@ -90,4 +90,7 @@ export default class ArticleDetail extends Vue {
 .article-content {
   padding: 30px 22px 0px 22px;
 }
+.article-content >>> img,p,span {
+  width: 100%;
+}
 </style>
